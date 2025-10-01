@@ -3,6 +3,7 @@ clc
 clear all
 %% Script to plot the maps
 [files, path] = uigetfile('*.txt', 'Sélectionnez les fichiers', 'MultiSelect', 'on');
+str_file_dir = convertCharsToStrings(path);
 
 coord = struct();
 Sessions = [];
@@ -20,21 +21,27 @@ muscle = reponse{1};  % On récupère le texte saisi
 disp(['The targeted muscle is the ' muscle '.']);
 
 % Collecting the data
-str_file = convertCharsToStrings(files);
-str_file_dir = convertCharsToStrings(path);
-str_file_path = str_file_dir + str_file;
-data = parseTxtFile(str_file_path);
-[X, Y, Z, PP] = collectingCoord(data, muscle);
+% str_file = convertCharsToStrings(files);
+% str_file_dir = convertCharsToStrings(path);
+% str_file_path = str_file_dir + str_file;
+% data = parseTxtFile(str_file_path);
+% [X, Y, Z, PP] = collectingCoord(data, muscle);
 
 %%
 if n > 1
     for i = 1:length(files)
         sess = "Session" + num2str(i);
         Sessions = [Sessions, sess];
+        str_file = convertCharsToStrings(files(i));
+        str_file_path = str_file_dir + str_file;
+        data = parseTxtFile(str_file_path);
+        [X, Y, Z, PP] = collectingCoord(data, muscle);
         coord.X.(sess) = X;
         coord.Y.(sess) = Y;
         coord.Z.(sess) = Z;
         coord.PP.(sess) = PP;
+        [X_t, Y_t, PP_t] = collectingTargetCoord(data);
+        coord.X_t.sess) = 
         figure
         plottingTheMap(X, Y, Z, PP, muscle, i)
     end
@@ -61,6 +68,10 @@ if n > 1
 
 else
     sess = "Session";
+    str_file = convertCharsToStrings(files);
+    str_file_path = str_file_dir + str_file;
+    data = parseTxtFile(str_file_path);
+    [X, Y, Z, PP] = collectingCoord(data, muscle);
     coord.X.(sess) = X;
     coord.Y.(sess) = Y;
     coord.Z.(sess) = Z;

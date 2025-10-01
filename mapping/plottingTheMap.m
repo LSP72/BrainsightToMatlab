@@ -14,6 +14,8 @@ function plot = plottingTheMap(X, Y, Z, PP, muscle, option)
 
 
     % figure()
+
+    %% 
     subplot(2,1,1);
     s = scatter3(X, Y, Z, 60, PP, 'filled');
     colormap(jet);   % ou 'hot' pour retrouver les couleurs du logiciel
@@ -30,19 +32,33 @@ function plot = plottingTheMap(X, Y, Z, PP, muscle, option)
     xlabel('X')
     ylabel('Y')
     zlabel('Z')
-
-
-    % Smoothed map
-    DT = delaunayTriangulation(X', Y', Z'); % X, Y, Z vectors must be in column
-    [K, v] = convexHull(DT);
     
-    % figure;
+    %% 2D map
     subplot(2,1,2);
-    trisurf(K, X', Y', Z', PP', 'EdgeColor', 'none');    % X, Y, Z, and PP vectors must be in column
+    [xq, yq] = meshgrid(linspace(min(X), max(X), 100), ...
+                        linspace(min(Y), max(Y), 100));
+
+    % Interpolate scattered values (natural works well for smooth maps)
+    PPq = griddata(X, Y, PP, xq, yq, 'natural');
+    
+    % figure
+    contourf(xq, yq, PPq, 20, 'LineColor', 'none');  % 20 contour levels
     colorbar;
-    shading interp; % This gives you the smooth color transitions
-    camlight; lightig gouraud;
-    xlabel('X'); ylabel('Y'); zlabel('Z');
-    title('3D TMS Surface Map');
+    xlabel('X'); ylabel('Y');
+    title(['Map of the ',muscle]);
+
+    %% 3D map
+    % Smoothed map
+    % DT = delaunayTriangulation(X', Y', Z'); % X, Y, Z vectors must be in column
+    % [K, v] = convexHull(DT);
+    % 
+    % % figure;
+    % subplot(2,1,2);
+    % trisurf(K, X', Y', Z', PP', 'EdgeColor', 'none');    % X, Y, Z, and PP vectors must be in column
+    % colorbar;
+    % shading interp; % This gives you the smooth color transitions
+    % camlight; lighting gouraud;
+    % xlabel('X'); ylabel('Y'); zlabel('Z');
+    % title('3D TMS Surface Map');
 
 end
