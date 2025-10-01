@@ -12,26 +12,26 @@ function plot = plotting2DMap(X, Y, PP, muscle, option)
     
     [X_grid, Y_grid] = meshgrid(x_unique, y_unique);
     Z_grid = reshape(PP_sorted, length(y_unique), length(x_unique));
-    mesh(X_grid, Y_grid, Z_grid);
-    xlabel('X');
-    ylabel('Y');
-    zlabel('Mean');
-    title('3D Mesh Plot');
-    
+    % mesh(X_grid, Y_grid, Z_grid);
+    % xlabel('X');
+    % ylabel('Y');
+    % zlabel('Mean');
+    % title('3D Mesh Plot');
+    % 
     % Define a finer grid
     xq = linspace(min(X_grid(:)), max(X_grid(:)), 50);  
     yq = linspace(min(Y_grid(:)), max(Y_grid(:)), 50);  
     [Xq, Yq] = meshgrid(xq, yq);
     Zq = interp2(X_grid, Y_grid, Z_grid, Xq, Yq, 'cubic');  % 'linear', 'cubic', or 'spline'
+    
     %%
-    figure
     % creating the coloured map  
     subplot(2, 1, 1)
     contourf(xq, yq, Zq, 20, 'LineColor', 'none');  % 20 contour levels
     colorbar;
     xlabel('X'), ylabel('Y')
     % title('2D mapping');
-    if nargin < 6 || isempty(option)
+    if nargin < 5 || isempty(option)
         title(['Plot of the mean cortical map for the ' muscle])
     else
         sessionNb = option;
@@ -45,7 +45,7 @@ function plot = plotting2DMap(X, Y, PP, muscle, option)
     % title('3D mapping');   
     xlabel('X'), ylabel('Y')
 
-    if nargin < 6 || isempty(option)
+    if nargin < 5 || isempty(option)
         title(['Plot of the 3D mean cortical map for the ' muscle])
     else
         sessionNb = option;
