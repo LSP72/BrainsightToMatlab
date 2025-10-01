@@ -11,17 +11,19 @@ for i = 1:n
     pk2pk = [];
 
     intraFieldNames = fieldnames(S.(fieldNames{i}));
-
+    
+    % Collecting the pk2pk values
     for j = 1:length(intraFieldNames)
         pk2pk = [pk2pk, S.(fieldNames{i}).(intraFieldNames{j}).EMG_Peak_to_peak_1];
     end
-
+    
+    % Looking for their 'mapping' coordinates
     numStr = regexp(S.(fieldNames{i}).(intraFieldNames{j}).Assoc__Target, '\((.*?)\)', 'tokens');
     numbers = str2double(strsplit(numStr{1}{1}, ','));
 
-    X_MEPs = [X_MEPs; numbers(1)];
-    Y_MEPs = [Y_MEPs; numbers(2)];
-    meanMEPs = [meanMEPs; mean(pk2pk)];
+    X_MEPs = [X_MEPs; numbers(1)];      % Collecting all X-coordinates
+    Y_MEPs = [Y_MEPs; numbers(2)];      % Collecting all Y-coordinates
+    meanMEPs = [meanMEPs; mean(pk2pk)]; % Collecting the average pk2pk value associated
 
 end
 
