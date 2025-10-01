@@ -41,30 +41,41 @@ if n > 1
         coord.Z.(sess) = Z;
         coord.PP.(sess) = PP;
         [X_t, Y_t, PP_t] = collectingTargetCoord(data);
-        coord.X_t.sess) = 
+        coord.X_t.(sess) = X_t;
+        coord.Y_t.(sess) = Y_t;
+        coord.PP_t.(sess) = PP_t;
+        figure
+        plotting2DMap(X_t, Y_t, PP_t, muscle, i)
         figure
         plottingTheMap(X, Y, Z, PP, muscle, i)
     end
 
-    % Plotting the average map
-    XX = zeros(size(coord.X.(Sessions(1))));
-    YY = zeros(size(coord.Y.(Sessions(1))));
-    ZZ = zeros(size(coord.Z.(Sessions(1))));
-    PPP = zeros(size(coord.PP.(Sessions(1))));
+    %% Plotting the average map
 
-    for i = 1:n
-        XX = XX + coord.X.(Sessions(i));
-        YY = YY + coord.Y.(Sessions(i));
-        ZZ = ZZ + coord.Z.(Sessions(i));
-        PPP = PPP + coord.PP.(Sessions(i));
-    end
-    XX = XX/n ;
-    YY = YY/n;
-    ZZ = ZZ/n;
-    PPP = PPP/n;
+    % When using real coordinate of each session
+    % XX = zeros(size(coord.X.(Sessions(1))));
+    % YY = zeros(size(coord.Y.(Sessions(1))));
+    % ZZ = zeros(size(coord.Z.(Sessions(1))));
+    % PPP = zeros(size(coord.PP.(Sessions(1))));
 
-    figure
-    plottingTheMap(XX, YY, ZZ, PPP, muscle)
+    % for i = 1:n
+    %     XX = XX + coord.X.(Sessions(i));
+    %     YY = YY + coord.Y.(Sessions(i));
+    %     ZZ = ZZ + coord.Z.(Sessions(i));
+    %     PPP = PPP + coord.PP.(Sessions(i));
+    % end
+    % XX = XX/n ;
+    % YY = YY/n;
+    % ZZ = ZZ/n;
+    % PPP = PPP/n;
+    % 
+    % figure
+    % plottingTheMap(XX, YY, ZZ, PPP, muscle)
+    % hold on
+
+    % When plotting the average map from the target coordinates
+    
+
 
 else
     sess = "Session";

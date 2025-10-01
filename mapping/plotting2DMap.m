@@ -25,23 +25,31 @@ function plot = plotting2DMap(X, Y, PP, muscle, option)
     Zq = interp2(X_grid, Y_grid, Z_grid, Xq, Yq, 'cubic');  % 'linear', 'cubic', or 'spline'
     %%
     figure
-    
-    if nargin < 4 || isempty(option)
-        option = "contour"; 
-    end
-
-    switch option
-        case "contour"
-            contourf(xq, yq, Zq, 20, 'LineColor', 'none');  % 20 contour levels
-            colorbar;
-            titleTxt = '2D mapping';
-        case "mesh"
-            mesh(Xq, Yq, Zq)
-            titleTxt = '3D mapping';   
-        otherwise
-            error("Unknown option: %s", option);
-    end
-
+    % creating the coloured map  
+    subplot(2, 1, 1)
+    contourf(xq, yq, Zq, 20, 'LineColor', 'none');  % 20 contour levels
+    colorbar;
     xlabel('X'), ylabel('Y')
-    title(titleTxt)
+    % title('2D mapping');
+    if nargin < 6 || isempty(option)
+        title(['Plot of the mean cortical map for the ' muscle])
+    else
+        sessionNb = option;
+        str_sessionNb = num2str(sessionNb);
+        title(['Plot of the cortical map for the ' muscle ' for the session ' str_sessionNb])
+    end
+    
+    % 3D plotting
+    subplot(2, 1, 2)
+    mesh(Xq, Yq, Zq)
+    % title('3D mapping');   
+    xlabel('X'), ylabel('Y')
+
+    if nargin < 6 || isempty(option)
+        title(['Plot of the 3D mean cortical map for the ' muscle])
+    else
+        sessionNb = option;
+        str_sessionNb = num2str(sessionNb);
+        title(['Plot of the 3D cortical map for the ' muscle ' for the session ' str_sessionNb])
+    end
 end
