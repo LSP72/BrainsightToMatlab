@@ -48,6 +48,8 @@ if n > 1
         plotting2DMap(X_t, Y_t, PP_t, muscle, i)
         figure
         plottingTheMap(X, Y, Z, PP, muscle, i)
+        figure
+        gridDisplay(X_t, Y_t, Grid, muscle, i)
     end
 
     %% Plotting the average map
@@ -80,6 +82,8 @@ if n > 1
     plotting2DMap(X_t, Y_t, PPP_t, muscle)
     figure
     plottingTheMap(XX, YY, ZZ, PPP, muscle)
+    figure
+    gridDisplay(X_t, Y_t, Grid, muscle)
 
 
 else
@@ -100,5 +104,7 @@ else
     plotting2DMap(X_t, Y_t, PP_t, muscle)
     figure
     plottingTheMap(X, Y, Z, PP, muscle, 1)
+    figure
+    gridDisplay(X_t, Y_t, Grid, muscle)
 
 end
