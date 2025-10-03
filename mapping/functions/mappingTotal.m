@@ -5,9 +5,6 @@ clear all
 [files, path] = uigetfile('*.txt', 'Sélectionnez les fichiers', 'MultiSelect', 'on');
 str_file_dir = convertCharsToStrings(path);
 
-coord = struct();
-Sessions = [];
-
 % collecting if several files have been selected:
 if isa(files, 'cell')
     n = length(files);
@@ -28,13 +25,19 @@ disp(['The targeted muscle is the ' muscle '.']);
 % [X, Y, Z, PP] = collectingCoord(data, muscle);
 
 %%
+
+coord = struct();
+Sessions = [];
+sample_indexes = {[9, 10, 13], [], []};
+
 if n > 1
     for i = 1:length(files)
         sess = "Session" + num2str(i);
         Sessions = [Sessions, sess];
         str_file = convertCharsToStrings(files(i));
         str_file_path = str_file_dir + str_file;
-        data = parseTxtFile(str_file_path);
+        allData = parseTxtFile(str_file_path);
+        data = selectSamples(allData, sample_indexes{i}); % for now, the list is defined earlier by hand
         [X, Y, Z, PP] = collectingCoord(data, muscle);
         coord.X.(sess) = X;
         coord.Y.(sess) = Y;
@@ -49,7 +52,7 @@ if n > 1
         figure
         plottingTheMap(X, Y, Z, PP, muscle, i)
         figure
-        gridDisplay(X_t, Y_t, Grid, muscle, i)
+        gridDisplay(X_t, Y_t, MEPGrid(X_t, Y_t, PP_t), muscle, i)
     end
 
     %% Plotting the average map
@@ -82,15 +85,16 @@ if n > 1
     plotting2DMap(X_t, Y_t, PPP_t, muscle)
     figure
     plottingTheMap(XX, YY, ZZ, PPP, muscle)
-    figure
-    gridDisplay(X_t, Y_t, Grid, muscle)
+    % figure
+    gridDisplay(X_t, Y_t, MEPGrid(X_t, Y_t, PPP_t), muscle)
 
 
 else
     sess = "Session";
     str_file = convertCharsToStrings(files);
     str_file_path = str_file_dir + str_file;
-    data = parseTxtFile(str_file_path);
+    allData = parseTxtFile(str_file_path);
+    data = selectSamples(allData, sample_indexes{i});
     [X, Y, Z, PP] = collectingCoord(data, muscle);
     coord.X.(sess) = X;
     coord.Y.(sess) = Y;
@@ -105,6 +109,6 @@ else
     figure
     plottingTheMap(X, Y, Z, PP, muscle, 1)
     figure
-    gridDisplay(X_t, Y_t, Grid, muscle)
+    gridDisplay(X_t, Y_t, MEPGrid(X_t, Y_t, PP_t), muscle)
 
 end
