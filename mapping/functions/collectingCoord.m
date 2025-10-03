@@ -9,7 +9,7 @@ function [X, Y, Z, PP] = collectingCoord(data, muscle)
     for i = 1:length(data.samples)
         if ~isempty(data.samples{1, i}.Assoc__Target)
             targetName = strsplit(data.samples{1, i}.Assoc__Target);
-            if length(targetName) > 1 & strcmp(targetName{1}, muscle) & data.samples{1, i}.Loc__Z~=-78
+            if length(targetName) > 1 & data.samples{1, i}.Loc__Z~=-78 % & strcmp(targetName{1}, muscle)
                 sampleName = matlab.lang.makeValidName(data.samples{1, i}.Sample_Name);
                 grid.(sampleName).Loc_X = data.samples{1, i}.Loc__X;
                 grid.(sampleName).Loc_Y = data.samples{1, i}.Loc__Y;
