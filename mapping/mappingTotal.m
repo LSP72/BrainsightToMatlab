@@ -1,6 +1,7 @@
 %% Clearing the environment
 clc
 clear all
+
 %% Script to plot the maps
 [files, path] = uigetfile('*.txt', 'Sélectionnez les fichiers', 'MultiSelect', 'on');
 str_file_dir = convertCharsToStrings(path);
@@ -38,20 +39,22 @@ if n > 1
         str_file_path = str_file_dir + str_file;
         allData = parseTxtFile(str_file_path);
         data = selectSamples(allData, sample_indexes{i}); % for now, the list is defined earlier by hand
-        [X, Y, Z, PP] = collectingCoord(data, muscle);
+        selectedData = selectingMEPBSForMapping(data);
+        [X, Y, Z, PP] = collectingCoord(selectedData, muscle);
         coord.X.(sess) = X;
         coord.Y.(sess) = Y;
         coord.Z.(sess) = Z;
         coord.PP.(sess) = PP;
-        [X_t, Y_t, PP_t] = collectingTargetCoord(data);
+        [X_t, Y_t, PP_t] = collectingTargetCoord(selectedData);
         coord.X_t.(sess) = X_t;
         coord.Y_t.(sess) = Y_t;
         coord.PP_t.(sess) = PP_t;
+ 
         figure
         plotting2DMap(X_t, Y_t, PP_t, muscle, i)
         figure
         plottingTheMap(X, Y, Z, PP, muscle, i)
-        figure
+        % figure
         gridDisplay(X_t, Y_t, MEPGrid(X_t, Y_t, PP_t), muscle, i)
     end
 
@@ -88,19 +91,19 @@ if n > 1
     % figure
     gridDisplay(X_t, Y_t, MEPGrid(X_t, Y_t, PPP_t), muscle)
 
-
 else
     sess = "Session";
     str_file = convertCharsToStrings(files);
     str_file_path = str_file_dir + str_file;
     allData = parseTxtFile(str_file_path);
     data = selectSamples(allData, sample_indexes{i});
-    [X, Y, Z, PP] = collectingCoord(data, muscle);
+    selectedData = selectingMEPBSForMapping(data);
+    [X, Y, Z, PP] = collectingCoord(selectedData, muscle);
     coord.X.(sess) = X;
     coord.Y.(sess) = Y;
     coord.Z.(sess) = Z;
     coord.PP.(sess) = PP;
-    [X_t, Y_t, PP_t] = collectingTargetCoord(data);
+    [X_t, Y_t, PP_t] = collectingTargetCoord(selectedData);
     coord.X_t.(sess) = X_t;
     coord.Y_t.(sess) = Y_t;
     coord.PP_t.(sess) = PP_t;
