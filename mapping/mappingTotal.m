@@ -96,7 +96,7 @@ else
     str_file = convertCharsToStrings(files);
     str_file_path = str_file_dir + str_file;
     allData = parseTxtFile(str_file_path);
-    data = selectSamples(allData, sample_indexes{i});
+    data = selectSamples(allData, sample_indexes{1});
     selectedData = selectingMEPBSForMapping(data);
     [X, Y, Z, PP] = collectingCoord(selectedData, muscle);
     coord.X.(sess) = X;

@@ -30,7 +30,6 @@ function plot = plotting2DMap(X, Y, PP, muscle, option)
     contourf(xq, yq, Zq, 20, 'LineColor', 'none');  % 20 contour levels
     colorbar;
     xlabel('X'), ylabel('Y')
-    % title('2D mapping');
     if nargin < 5 || isempty(option)
         title(['Plot of the mean cortical map for the ' muscle])
     else
@@ -39,17 +38,38 @@ function plot = plotting2DMap(X, Y, PP, muscle, option)
         title(['Plot of the cortical map for the ' muscle ' for the session ' str_sessionNb])
     end
     
-    % 3D plotting
+    % Scatter plot
     subplot(2, 1, 2)
-    mesh(Xq, Yq, Zq)
-    % title('3D mapping');   
+    scatter(X, Y, 100, PP, 'filled')
+    xlim([min(X) - 1, max(X) + 1])
+    ylim([min(Y) - 1, max(Y) + 1])
+    grid on
+    box on
+    colormap(turbo)       % or 'parula', 'jet', 'hot'...
+    colorbar
+    caxis([min(PP) max(PP)])
     xlabel('X'), ylabel('Y')
 
     if nargin < 5 || isempty(option)
-        title(['Plot of the 3D mean cortical map for the ' muscle])
+        title(['Scatter plot of the mean cortical map for the ' muscle])
     else
         sessionNb = option;
         str_sessionNb = num2str(sessionNb);
-        title(['Plot of the 3D cortical map for the ' muscle ' for the session ' str_sessionNb])
+        title(['Scatter plot of the cortical map for the ' muscle ' for the session ' str_sessionNb])
     end
+
+    % % Ignored for now
+    % % 3D plotting
+    % subplot(2, 1, 2)
+    % mesh(Xq, Yq, Zq)
+    % % title('3D mapping');   
+    % xlabel('X'), ylabel('Y')
+    % 
+    % if nargin < 5 || isempty(option)
+    %     title(['Plot of the 3D mean cortical map for the ' muscle])
+    % else
+    %     sessionNb = option;
+    %     str_sessionNb = num2str(sessionNb);
+    %     title(['Plot of the 3D cortical map for the ' muscle ' for the session ' str_sessionNb])
+    % end
 end
