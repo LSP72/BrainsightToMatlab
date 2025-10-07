@@ -1,4 +1,4 @@
-function [X, Y, PP] = collectingTargetCoord(data)
+function [X, Y, Z] = collectingTargetCoord(data)
     %{
         This function collects the coordinates of grid followed during the
         mapping as long as the peak-to-peak MEP value of the concerned
@@ -8,21 +8,26 @@ function [X, Y, PP] = collectingTargetCoord(data)
 
     X = [];
     Y = [];
-    PP = [];
-    
-    % Collecting 
-    n = length(data.samples);
+    Z = [];
+    grid = struct();
 
-    for i = 1:n
-        % Looking for the 'mapping' coordinates
-        numStr = regexp(data.samples{1,i}.Assoc__Target, '\((.*?)\)', 'tokens');
-        numbers = str2double(strsplit(numStr{1}{1}, ','));
-
-        % Collecting the info
-        X = [X; numbers(1)];
-        Y = [Y; numbers(2)];
-        PP = [PP; data.samples{1,i}.EMG_Peak_to_peak_1];
+    for i = 1:length(data.targets)
+        if ~isempty(data.targets{1, i}.Target_Name)
+            splittedTargetName = strsplit(data.targets{1, i}.Target_Name);
+            if length(splittedTargetName) > 2 & ~ismember('Sample', splittedTargetName)
+                targetName = matlab.lang.makeValidName(data.targets{1, i}.Target_Name);
+                x = data.targets{1, i}.Loc__X;
+                y = data.targets{1, i}.Loc__Y;
+                z = data.targets{1, i}.Loc__Z;
+                grid.X.(targetName) = x;
+                grid.Y.(targetName) = y;
+                grid.Z.(targetName) = z;
+                X = [X; x];
+                Y = [Y; y];
+                Z = [Z; z];
+            end
+        end
 
     end
-
+    assignin('base', 'gridCoord', grid);
 end
