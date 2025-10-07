@@ -1,10 +1,15 @@
 %% Clearing the environment
 clc
 clear all
+addpath(genpath(userpath))
+
+%% Initiating which MEP is not considered
+sample_indexes = {[], [], []};
 
 %% Script to plot the maps
 [files, path] = uigetfile('*.txt', 'Sélectionnez les fichiers', 'MultiSelect', 'on');
 str_file_dir = convertCharsToStrings(path);
+outputDir = fullfile(path, 'results');
 
 % collecting if several files have been selected:
 if isa(files, 'cell')
@@ -29,7 +34,6 @@ disp(['The targeted muscle is the ' muscle '.']);
 
 coord = struct();
 Sessions = [];
-sample_indexes = {[9, 10, 13], [], []};
 
 if n > 1
     for i = 1:length(files)
@@ -45,12 +49,12 @@ if n > 1
         coord.Y.(sess) = Y;
         coord.Z.(sess) = Z;
         coord.PP.(sess) = PP;
-        [X_t, Y_t, PP_t] = collectingTargetCoord(selectedData);
-        coord.X_t.(sess) = X_t;
-        coord.Y_t.(sess) = Y_t;
+        [XAbsTarget, YAbsTarget, PP_t] = collectingAbsTargetCoord(selectedData);
+        coord.X_Abs.(sess) = XAbsTarget;
+        coord.Y_Abs.(sess) = YAbsTarget;
         coord.PP_t.(sess) = PP_t;
- 
-        figure
+        [XTarget, YTarget, ZTarget] = collectingTargetCoord(data);
+        saveData(XTarget, YTarget, ZTarget, PP_t, outputDir, muscle, sess);
         plotting2DMap(X_t, Y_t, PP_t, muscle, i)
         figure
         plottingTheMap(X, Y, Z, PP, muscle, i)
@@ -84,8 +88,8 @@ if n > 1
     end
     PPP_t = PPP_t/n;
 
-    figure
-    plotting2DMap(X_t, Y_t, PPP_t, muscle)
+    saveData(XTarget, YTarget, ZTarget, PP_t, outputDir, muscle, 'average');
+
     figure
     plottingTheMap(XX, YY, ZZ, PPP, muscle)
     % figure
@@ -103,12 +107,12 @@ else
     coord.Y.(sess) = Y;
     coord.Z.(sess) = Z;
     coord.PP.(sess) = PP;
-    [X_t, Y_t, PP_t] = collectingTargetCoord(selectedData);
-    coord.X_t.(sess) = X_t;
-    coord.Y_t.(sess) = Y_t;
+    [XAbsTarget, YAbsTarget, PP_t] = collectingTargetCoord(selectedData);
+    coord.X_Abs.(sess) = XAbsTarget;
+    coord.Y_Abs.(sess) = YAbsTarget;
     coord.PP_t.(sess) = PP_t;
-    figure
-    plotting2DMap(X_t, Y_t, PP_t, muscle)
+    [XTarget, YTarget, ZTarget] = collectingTargetCoord(data);
+    saveData(XTarget, YTarget, ZTarget, PP_t, outputDir, muscle, '');
     figure
     plottingTheMap(X, Y, Z, PP, muscle, 1)
     figure
