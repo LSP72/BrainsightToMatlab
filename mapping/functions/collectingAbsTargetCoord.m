@@ -1,4 +1,4 @@
-function [X, Y, PP] = collectingAbsTargetCoord(data)
+function [X, Y, PP] = collectingAbsTargetCoord(data, option)
     %{
         This function collects the coordinates of grid followed during the
         mapping as long as the peak-to-peak MEP value of the concerned
@@ -17,12 +17,17 @@ function [X, Y, PP] = collectingAbsTargetCoord(data)
         % Looking for the 'mapping' coordinates
         numStr = regexp(data.samples{1,i}.Assoc__Target, '\((.*?)\)', 'tokens');
         numbers = str2double(strsplit(numStr{1}{1}, ','));
-
-        % Collecting the info
-        X = [X; numbers(1)];
-        Y = [Y; numbers(2)];
-        PP = [PP; data.samples{1,i}.EMG_Peak_to_peak_1];
-
+        if nargin < 2 || isempty(option)
+            % Collecting the info
+            X = [X; numbers(1)];
+            Y = [Y; numbers(2)];
+            PP = [PP; data.samples{1,i}.EMG_Peak_to_peak_1];
+        else
+            % Collecting the info
+            X = [X; numbers(1)];
+            Y = [Y; numbers(2)];
+            PP = [PP; data.samples{1,i}.EMG_Peak_to_peak_2];
+        end
     end
 
 end

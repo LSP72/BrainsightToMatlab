@@ -1,4 +1,4 @@
-function [selectedMEPs] = selectingMEPBSForMapping(data)
+function [selectedMEPs] = selectingMEPBSForMapping(data, option)
 
     %{
       data is the structure extracted from Brainsight;
@@ -18,9 +18,16 @@ function [selectedMEPs] = selectingMEPBSForMapping(data)
 
     % Create a matrix with all the MEPs to plot
     allMEP = [] ;
-    for i = 1:nMEP
-        MEP = data.samples{1,i}.EMG_Data_1 ;
+    if nargin < 2 || isempty(option)
+        for i = 1:nMEP
+            MEP = data.samples{1,i}.EMG_Data_1 ;
+            allMEP = [allMEP, MEP'];
+        end
+    else
+        for i = 1:nMEP
+        MEP = data.samples{1,i}.EMG_Data_2 ;
         allMEP = [allMEP, MEP'];
+        end
     end
 
     % Plot all the MEPs

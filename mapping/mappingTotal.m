@@ -4,12 +4,12 @@ clear all
 addpath(genpath(userpath))
 
 %% Initiating which MEP is not considered
-sample_indexes = {[], [], []};
+sample_indexes = {[], [10 16], [3 21]};
 
 %% Script to plot the maps
 [files, path] = uigetfile('*.txt', 'Sélectionnez les fichiers', 'MultiSelect', 'on');
 str_file_dir = convertCharsToStrings(path);
-outputDir = fullfile(path, 'results');
+outputDir = fullfile('/Users/mathildetardif/Documents/MATLAB/BrainsightToMatlab/mapping/results');
 
 % collecting if several files have been selected:
 if isa(files, 'cell')
@@ -41,7 +41,7 @@ if n > 1
         Sessions = [Sessions, sess];
         str_file = convertCharsToStrings(files(i));
         str_file_path = str_file_dir + str_file;
-        allData = parseTxtFile(str_file_path);
+        allData = parseTxtFileMapping(str_file_path);
         data = selectSamples(allData, sample_indexes{i}); % for now, the list is defined earlier by hand
         selectedData = selectingMEPBSForMapping(data);
         [X, Y, Z, PP] = collectingCoord(selectedData, muscle);
@@ -55,11 +55,12 @@ if n > 1
         coord.PP_t.(sess) = PP_t;
         [XTarget, YTarget, ZTarget] = collectingTargetCoord(data);
         saveData(XTarget, YTarget, ZTarget, PP_t, outputDir, muscle, sess);
-        plotting2DMap(X_t, Y_t, PP_t, muscle, i)
-        figure
-        plottingTheMap(X, Y, Z, PP, muscle, i)
         % figure
-        gridDisplay(X_t, Y_t, MEPGrid(X_t, Y_t, PP_t), muscle, i)
+        % plotting2DMap(XAbsTarget, YAbsTarget, PP_t, muscle, i)
+        % figure
+        % plottingTheMap(X, Y, Z, PP, muscle, i)
+        % % figure
+        % gridDisplay(XAbsTarget, YAbsTarget, MEPGrid(XAbsTarget, YAbsTarget, PP_t), muscle, i)
     end
 
     %% Plotting the average map
@@ -90,16 +91,18 @@ if n > 1
 
     saveData(XTarget, YTarget, ZTarget, PP_t, outputDir, muscle, 'average');
 
-    figure
-    plottingTheMap(XX, YY, ZZ, PPP, muscle)
     % figure
-    gridDisplay(X_t, Y_t, MEPGrid(X_t, Y_t, PPP_t), muscle)
+    % plotting2DMap(XAbsTarget, YAbsTarget, PPP_t, muscle)
+    % figure
+    % plottingTheMap(XX, YY, ZZ, PPP, muscle)
+    % % figure
+    % gridDisplay(XAbsTarget, YAbsTarget, MEPGrid(XAbsTarget, YAbsTarget, PPP_t), muscle)
 
 else
     sess = "Session";
     str_file = convertCharsToStrings(files);
     str_file_path = str_file_dir + str_file;
-    allData = parseTxtFile(str_file_path);
+    allData = parseTxtFileMapping(str_file_path);
     data = selectSamples(allData, sample_indexes{1});
     selectedData = selectingMEPBSForMapping(data);
     [X, Y, Z, PP] = collectingCoord(selectedData, muscle);
@@ -107,15 +110,17 @@ else
     coord.Y.(sess) = Y;
     coord.Z.(sess) = Z;
     coord.PP.(sess) = PP;
-    [XAbsTarget, YAbsTarget, PP_t] = collectingTargetCoord(selectedData);
+    [XAbsTarget, YAbsTarget, PP_t] = collectingAbsTargetCoord(selectedData);
     coord.X_Abs.(sess) = XAbsTarget;
     coord.Y_Abs.(sess) = YAbsTarget;
     coord.PP_t.(sess) = PP_t;
     [XTarget, YTarget, ZTarget] = collectingTargetCoord(data);
     saveData(XTarget, YTarget, ZTarget, PP_t, outputDir, muscle, '');
-    figure
-    plottingTheMap(X, Y, Z, PP, muscle, 1)
-    figure
-    gridDisplay(X_t, Y_t, MEPGrid(X_t, Y_t, PP_t), muscle)
+    % figure
+    % plotting2DMap(XAbsTarget, YAbsTarget, PP_t, muscle)
+    % figure
+    % plottingTheMap(X, Y, Z, PP, muscle, 1)
+    % figure
+    % gridDisplay(XAbsTarget, YAbsTarget, MEPGrid(XAbsTarget, YAbsTarget, PP_t), muscle)
 
 end

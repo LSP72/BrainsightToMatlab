@@ -262,6 +262,11 @@ function example_usage()
             fprintf('  EMG data points: %d\n', length(sample1.EMG_Data_1));
             fprintf('  First 5 EMG values: [%.2f, %.2f, %.2f, %.2f, %.2f]\n', sample1.EMG_Data_1(1:5));
         end
+        if isfield(sample1, 'EMG_Data_2') && ~isempty(sample1.EMG_Data_2)
+            fprintf('  EMG data points: %d\n', length(sample1.EMG_Data_2));
+            fprintf('  First 5 EMG values: [%.2f, %.2f, %.2f, %.2f, %.2f]\n', sample1.EMG_Data_2(1:5));
+        end
+        
     end
     
     if ~isempty(landmarks)
