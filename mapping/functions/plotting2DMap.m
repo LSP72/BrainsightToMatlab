@@ -28,6 +28,7 @@ function plot = plotting2DMap(X, Y, PP, muscle, option)
     % creating the coloured map  
     subplot(2, 1, 1)
     contourf(xq, yq, Zq, 20, 'LineColor', 'none');  % 20 contour levels
+    set(gca, 'XDir', 'reverse', 'YDir', 'reverse')
     colorbar;
     xlabel('X'), ylabel('Y')
     if nargin < 5 || isempty(option)
@@ -41,6 +42,7 @@ function plot = plotting2DMap(X, Y, PP, muscle, option)
     % Scatter plot
     subplot(2, 1, 2)
     scatter(X, Y, 100, PP, 'filled')
+    set(gca, 'XDir', 'reverse', 'YDir', 'reverse')
     xlim([min(X) - 1, max(X) + 1])
     ylim([min(Y) - 1, max(Y) + 1])
     grid on
