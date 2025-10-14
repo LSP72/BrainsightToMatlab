@@ -59,19 +59,4 @@ function plot = plotting2DMap(X, Y, PP, muscle, option)
         str_sessionNb = num2str(sessionNb);
         title(['Scatter plot of the cortical map for the ' muscle ' for the session ' str_sessionNb])
     end
-
-    % % Ignored for now
-    % % 3D plotting
-    % subplot(2, 1, 2)
-    % mesh(Xq, Yq, Zq)
-    % % title('3D mapping');   
-    % xlabel('X'), ylabel('Y')
-    % 
-    % if nargin < 5 || isempty(option)
-    %     title(['Plot of the 3D mean cortical map for the ' muscle])
-    % else
-    %     sessionNb = option;
-    %     str_sessionNb = num2str(sessionNb);
-    %     title(['Plot of the 3D cortical map for the ' muscle ' for the session ' str_sessionNb])
-    % end
 end
