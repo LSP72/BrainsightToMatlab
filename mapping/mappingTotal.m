@@ -5,15 +5,15 @@ addpath(genpath(userpath))
 
 %% Initiating which MEP is not considered
 % UL mapping:
-sample_indexes = {[], [10 16], [3 21]};
+% sample_indexes = {[], [10 16], [3 21]};
 % LL mapping:
-% sample_indexes = {[9 10 13], [], []};
+sample_indexes = {[9 10 13], [], []};
 
 %% Initiating if looking to EMG_1 or EMG_2
 % EMG_1
-option = [];
+% option = [];
 % % EMG_2
-% option = 2;
+option = 2;
 
 %% Script to plot the maps
 [files, path] = uigetfile('*.txt', 'Sélectionnez les fichiers', 'MultiSelect', 'on');
@@ -44,7 +44,7 @@ if n > 1
         allData = parseTxtFileMapping(str_file_path);
         data = selectSamples(allData, sample_indexes{i}); % for now, the list is defined earlier by hand
         selectedData = selectingMEPBSForMapping(data, option);
-        [X, Y, Z, PP] = collectingCoord(selectedData, muscle);
+        [X, Y, Z, PP] = collectingCoord(selectedData, muscle, otion);
         [XAbsTarget, YAbsTarget] = collectingAbsTargetCoord(selectedData);
         [XTarget, YTarget, ZTarget] = collectingTargetCoord(data);
         coord.X.(sess) = X;
@@ -62,7 +62,7 @@ if n > 1
         % figure
         % plottingTheMap(X, Y, Z, PP, muscle, i)
         % % figure
-        gridDisplay(XAbsTarget, YAbsTarget, MEPGrid(XAbsTarget, YAbsTarget, PP_t), muscle, i)
+        gridDisplay(XAbsTarget, YAbsTarget, MEPGrid(XAbsTarget, YAbsTarget, PP), muscle, i)
     end
 
     %% Plotting the average map
@@ -71,7 +71,7 @@ if n > 1
     XX = zeros(size(coord.X.(Sessions(1))));
     YY = zeros(size(coord.Y.(Sessions(1))));
     ZZ = zeros(size(coord.Z.(Sessions(1))));
-    PPP = zeros(size(coord.PP_t.(Sessions(1))));
+    PPP = zeros(size(coord.PP.(Sessions(1))));
 
     for i = 1:n
         XX = XX + coord.X.(Sessions(i));
@@ -87,11 +87,11 @@ if n > 1
     % saveData(XX', YY', ZZ', PPP, outputDir, muscle, 'average'); % option
     % 
     figure
-    plotting2DMap(XAbsTarget, YAbsTarget, PPP_t, muscle)
+    plotting2DMap(XAbsTarget, YAbsTarget, PPP, muscle)
     % figure
     % plottingTheMap(XX, YY, ZZ, PPP, muscle)
     % % figure
-    gridDisplay(XAbsTarget, YAbsTarget, MEPGrid(XAbsTarget, YAbsTarget, PPP_t), muscle)
+    gridDisplay(XAbsTarget, YAbsTarget, MEPGrid(XAbsTarget, YAbsTarget, PPP), muscle)
 
 else
     sess = "Session";
@@ -99,7 +99,7 @@ else
     str_file_path = str_file_dir + str_file;
     allData = parseTxtFileMapping(str_file_path);
     data = selectSamples(allData, sample_indexes{1});
-    selectedData = selectingMEPBSForMapping(data); % option
+    selectedData = selectingMEPBSForMapping(data);
     [X, Y, Z, PP] = collectingCoord(selectedData, muscle); % option
     [XAbsTarget, YAbsTarget] = collectingAbsTargetCoord(selectedData);
     [XTarget, YTarget, ZTarget] = collectingTargetCoord(data);
@@ -112,13 +112,13 @@ else
     coord.X_target.(sess) = XTarget;
     coord.Y_target.(sess) = YTarget;
     coord.Z_target.(sess) = ZTarget;
-    saveData(X', Y', Z', PP', outputDir, muscle, ''); % option
+    saveData(X', Y', Z', PP', outputDir, muscle, '', option); 
     
     figure
-    plotting2DMap(XAbsTarget, YAbsTarget, PP_t, muscle)
+    plotting2DMap(XAbsTarget, YAbsTarget, PP, muscle)
     % figure
     % plottingTheMap(X, Y, Z, PP, muscle, 1)
     % figure
-    gridDisplay(XAbsTarget, YAbsTarget, MEPGrid(XAbsTarget, YAbsTarget, PP_t), muscle)
+    gridDisplay(XAbsTarget, YAbsTarget, MEPGrid(XAbsTarget, YAbsTarget, PP), muscle)
 
 end
