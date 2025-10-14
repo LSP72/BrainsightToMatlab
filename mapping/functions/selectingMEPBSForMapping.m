@@ -66,10 +66,16 @@ function [selectedMEPs] = selectingMEPBSForMapping(data, option)
     f.UserData.selectedMEPs = {};
 
     % Button for analysis
-    uibutton(f, 'Text', 'Export Selected MEPs', ...
-             'Position', [400 40 200 40], ...
-             'ButtonPushedFcn', @(~,~) extractingSelectedMEPs(data, cb,f));
-
+    if nargin < 2 || isempty(option)
+        option = [];
+        uibutton(f, 'Text', 'Export Selected MEPs', ...
+                 'Position', [400 40 200 40], ...
+                 'ButtonPushedFcn', @(~,~) extractingSelectedMEPs(data, cb,f, option));
+    else
+        uibutton(f, 'Text', 'Export Selected MEPs', ...
+                 'Position', [400 40 200 40], ...
+                 'ButtonPushedFcn', @(~,~) extractingSelectedMEPs(data, cb,f, option));
+    end
     % Wait for the user to complete selection
     while isvalid(f) && ~f.UserData.completed
         drawnow;  % Process GUI events
@@ -96,7 +102,7 @@ function toggleMEP(src, hLine)
 end
 
 %% Function that returns only the selected MEPs
-function extractingSelectedMEPs(data, cb, f)
+function extractingSelectedMEPs(data, cb, f, option)
    
     selected = logical(arrayfun(@(x) x.Value, cb));
 
@@ -115,9 +121,16 @@ function extractingSelectedMEPs(data, cb, f)
     % Collect all the samples of selected MEPs
     selectedMEPs = data;          % actual MEP signals
     for i = 1:length(data.samples)
-        if ~selected(i)
-            selectedMEPs.samples{1, i}.EMG_Peak_to_peak_1 = 0;
-            selectedMEPs.samples{1, i}.EMG_Latency_1 = NaN;
+        if nargin < 4 || isempty(option)
+            if ~selected(i)
+                selectedMEPs.samples{1, i}.EMG_Peak_to_peak_1 = 0;
+                selectedMEPs.samples{1, i}.EMG_Latency_1 = NaN;
+            end
+        else
+            if ~selected(i)
+                selectedMEPs.samples{1, i}.EMG_Peak_to_peak_2 = 0;
+                selectedMEPs.samples{1, i}.EMG_Latency_2 = NaN;
+            end
         end
     end
     
