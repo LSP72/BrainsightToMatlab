@@ -9,6 +9,12 @@ sample_indexes = {[], [10 16], [3 21]};
 % LL mapping:
 % sample_indexes = {[9 10 13], [], []};
 
+%% Initiating if looking to EMG_1 or EMG_2
+% EMG_1
+option = [];
+% % EMG_2
+% option = 2;
+
 %% Script to plot the maps
 [files, path] = uigetfile('*.txt', 'Sélectionnez les fichiers', 'MultiSelect', 'on');
 str_file_dir = convertCharsToStrings(path);
@@ -23,17 +29,8 @@ end
 
 % Collecting the name of the muscle
 reponse = inputdlg('Targeted muscle:', 'Info request', [1 40]);
-muscle = reponse{1};  % On récupère le texte saisi
+muscle = reponse{1};  % Collecting the typed text
 disp(['The targeted muscle is the ' muscle '.']);
-
-% Collecting the data
-% str_file = convertCharsToStrings(files);
-% str_file_dir = convertCharsToStrings(path);
-% str_file_path = str_file_dir + str_file;
-% data = parseTxtFile(str_file_path);
-% [X, Y, Z, PP] = collectingCoord(data, muscle);
-
-%%
 
 coord = struct();
 Sessions = [];
@@ -46,20 +43,22 @@ if n > 1
         str_file_path = str_file_dir + str_file;
         allData = parseTxtFileMapping(str_file_path);
         data = selectSamples(allData, sample_indexes{i}); % for now, the list is defined earlier by hand
-        selectedData = selectingMEPBSForMapping(data); % option
+        selectedData = selectingMEPBSForMapping(data, option);
         [X, Y, Z, PP] = collectingCoord(selectedData, muscle);
+        [XAbsTarget, YAbsTarget] = collectingAbsTargetCoord(selectedData);
+        [XTarget, YTarget, ZTarget] = collectingTargetCoord(data);
         coord.X.(sess) = X;
         coord.Y.(sess) = Y;
         coord.Z.(sess) = Z;
         coord.PP.(sess) = PP;
-        [XAbsTarget, YAbsTarget, PP_t] = collectingAbsTargetCoord(selectedData); % option
         coord.X_Abs.(sess) = XAbsTarget;
         coord.Y_Abs.(sess) = YAbsTarget;
-        coord.PP_t.(sess) = PP_t;
-        [XTarget, YTarget, ZTarget] = collectingTargetCoord(data);
-        % saveData(X', Y', Z', PP_t, outputDir, muscle, sess); % option
+        coord.X_target.(sess) = XTarget;
+        coord.Y_target.(sess) = YTarget;
+        coord.Z_target.(sess) = ZTarget;
+        % saveData(X', Y', Z', PP, outputDir, muscle, sess, option);
         figure
-        plotting2DMap(XAbsTarget, YAbsTarget, PP_t, muscle, i)
+        plotting2DMap(XAbsTarget, YAbsTarget, PP, muscle, i)
         % figure
         % plottingTheMap(X, Y, Z, PP, muscle, i)
         % % figure
@@ -85,14 +84,7 @@ if n > 1
     ZZ = ZZ/n;
     PPP = PPP/n;
 
-    % When plotting the average map from the target coordinates
-    PPP_t = zeros(size(coord.PP_t.(Sessions(1))));
-    for i = 1:n
-        PPP_t = PPP_t + coord.PP_t.(Sessions(i));
-    end
-    PPP_t = PPP_t/n;
-
-    % saveData(XX', YY', ZZ', PPP_t, outputDir, muscle, 'average'); % option
+    % saveData(XX', YY', ZZ', PPP, outputDir, muscle, 'average'); % option
     % 
     figure
     plotting2DMap(XAbsTarget, YAbsTarget, PPP_t, muscle)
@@ -109,15 +101,19 @@ else
     data = selectSamples(allData, sample_indexes{1});
     selectedData = selectingMEPBSForMapping(data); % option
     [X, Y, Z, PP] = collectingCoord(selectedData, muscle); % option
+    [XAbsTarget, YAbsTarget] = collectingAbsTargetCoord(selectedData);
+    [XTarget, YTarget, ZTarget] = collectingTargetCoord(data);
     coord.X.(sess) = X;
     coord.Y.(sess) = Y;
     coord.Z.(sess) = Z;
-    [XAbsTarget, YAbsTarget, PP_t] = collectingAbsTargetCoord(selectedData); % option
+    coord.PP.(sess) = PP;
     coord.X_Abs.(sess) = XAbsTarget;
     coord.Y_Abs.(sess) = YAbsTarget;
-    coord.PP_t.(sess) = PP_t;
-    [XTarget, YTarget, ZTarget] = collectingTargetCoord(data);
-    saveData(X', Y', Z', PP', outputDir, muscle, '',2); % option
+    coord.X_target.(sess) = XTarget;
+    coord.Y_target.(sess) = YTarget;
+    coord.Z_target.(sess) = ZTarget;
+    saveData(X', Y', Z', PP', outputDir, muscle, ''); % option
+    
     figure
     plotting2DMap(XAbsTarget, YAbsTarget, PP_t, muscle)
     % figure
