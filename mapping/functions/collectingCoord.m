@@ -1,4 +1,4 @@
-function [X, Y, Z, PP_1] = collectingCoord(data, muscle)
+function [X, Y, Z, PP] = collectingCoord(data, muscle, option)
 
 % function
 
@@ -18,11 +18,13 @@ function [X, Y, Z, PP_1] = collectingCoord(data, muscle)
                 grid.(sampleName).Assoc_Target = data.samples{1, i}.Assoc__Target;
                 grid.(sampleName).EMG_PP_1 = data.samples{1, i}.EMG_Peak_to_peak_1;
                 grid.(sampleName).Latency_1 = data.samples{1, i}.EMG_Latency_1;
-                if  ismember('EMG_Peak_to_Peak_2', fieldNames) 
-                    grid.(sampleName).EMG_PP_2 = data.samples{1, i}.EMG_Peak_to_Peak_2;
-                end
-                if ismember('EMG_Latency_2', fieldNames)
-                    grid.(sampleName).Latency_2 = data.samples{1, i}.EMG_Latency_2;
+                if nargin > 2 || ~isempty(option)
+                    if ismember('EMG_Peak_to_peak_2', fieldNames) 
+                        grid.(sampleName).EMG_PP_2 = data.samples{1, i}.EMG_Peak_to_peak_2;
+                    end
+                    if ismember('EMG_Latency_2', fieldNames)
+                        grid.(sampleName).Latency_2 = data.samples{1, i}.EMG_Latency_2;
+                    end
                 end
             end
         else
@@ -48,6 +50,7 @@ function [X, Y, Z, PP_1] = collectingCoord(data, muscle)
 
     % Collecting X, Y, Z coordinates
     grid_points = fieldnames(grid);
+    sampleFields = fieldnames(grid.(uniqueFields{1}));
     X = [];
     Y = [];
     Z = [];
@@ -59,9 +62,14 @@ function [X, Y, Z, PP_1] = collectingCoord(data, muscle)
         Y = [Y, grid.(grid_points{i}).Loc_Y];
         Z = [Z, grid.(grid_points{i}).Loc_Z];
         PP_1 = [PP_1, grid.(grid_points{i}).EMG_PP_1];
-        if ismember('EMG_PP_2', fields)
+        if ismember('EMG_PP_2', sampleFields)
             PP_2 = [PP_2, grid.(grid_points{i}).EMG_PP_2];
         end
     end
-    
+
+    if nargin > 2 || ~isempty(option)
+        PP = PP_2;
+    else
+        PP = PP_1;
+    end
 end
