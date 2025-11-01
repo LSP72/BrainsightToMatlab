@@ -9,5 +9,4 @@ function time = timeDefinition(data)
     EMG_End = data.samples{1, 1}.EMG_End;       % end time of the signal
     EMG_Res = data.samples{1, 1}.EMG_Res_;      % EMG's resolution
     
-    Fs = 1000 / EMG_Res;    % EMG's frequency
-    time = EMG_Start:0.3333:EMG_End;     % time vector for plotting
+    time = EMG_Start:EMG_Res:EMG_End;     % time vector for plotting
