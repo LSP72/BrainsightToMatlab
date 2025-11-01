@@ -59,6 +59,12 @@ participant.('Latency') = latencies ;
 muscleCol = repmat({muscle}, nSelectedMEPs, 1);
 participant.('Muscle') = muscle;
 
+% Creating a column with the EMG data
+participantTable.EMG = cell(nSelectedMEPs,1);
+for i = 1:nSelectedMEPs
+    participantTable.EMG{i} = [allMEP(:,i)];
+end
+
 % Finalising the matrix
 indexes = {'MEP number', 'Muscle', 'Peak-to-Peak value (uV)', 'Latency (ms)'};
 participantTable = table(n, muscleCol, P2PCol, latCol, VariableNames=indexes);
